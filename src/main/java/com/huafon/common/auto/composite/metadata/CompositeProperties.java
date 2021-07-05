@@ -7,6 +7,8 @@ import java.util.List;
 @ConfigurationProperties(prefix = "auto.composite")
 public class CompositeProperties {
 
+    private boolean mybatisPlusEnabled = true;
+
     private List<String> basePackages;
 
     public List<String> getBasePackages() {
@@ -15,5 +17,13 @@ public class CompositeProperties {
 
     public void setBasePackages(List<String> basePackages) {
         this.basePackages = basePackages;
+    }
+
+    public boolean isMybatisPlusEnabled() {
+        return mybatisPlusEnabled;
+    }
+
+    public void setMybatisPlusEnabled(boolean mybatisPlusEnabled) {
+        this.mybatisPlusEnabled = mybatisPlusEnabled;
     }
 }

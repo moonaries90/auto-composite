@@ -4,5 +4,11 @@
     "sourceType": "com.huafon.common.auto.composite.metadata.CompositeProperties",
     "type": "java.util.List<java.lang.String>",
     "description": "默认扫描的包，避免所有的方法都被扫到导致启动过慢"
+  },{
+    "name": "auto.composite.mybatis-plus-enabled",
+    "sourceType": "com.huafon.common.auto.composite.metadata.CompositeProperties",
+    "type": "java.lang.Boolean",
+    "defaultValue": "true",
+    "description": "是否支持 mybatis-plus, 如果添加了 mybatis-plus 的包，默认是开启的"
   }]
 }

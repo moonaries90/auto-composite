@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.huafon.common.auto.composite.AutoCompositeConfiguration
+  com.huafon.common.auto.composite.AutoCompositeConfiguration,\
+  com.huafon.common.auto.composite.mybatisplus.MybatisPlusAutoCompositeConfiguration

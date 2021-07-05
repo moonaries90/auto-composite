@@ -1,5 +1,7 @@
 package com.huafon.common.auto.composite.annotation;
 
+import com.huafon.common.auto.composite.metadata.FetchType;
+
 import java.lang.annotation.*;
 
 @Documented
@@ -18,7 +20,6 @@ public @interface AutoField {
      * @return 参数名称
      */
     String paramName();
-
 
     /**
      * 获取类型

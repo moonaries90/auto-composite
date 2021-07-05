@@ -1,18 +1,9 @@
 package com.huafon.common.auto.composite.util;
 
-import com.huafon.common.auto.composite.handler.Composite;
-import org.springframework.cglib.proxy.Enhancer;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 public class TypeUtil {
-
-    private Enhancer enhancer;
-
-    public <T> T transform(T t) {
-        return null;
-    }
 
     public static Class<?>[] getActualClass(Type type) {
         if (type instanceof ParameterizedType) {
@@ -32,16 +23,39 @@ public class TypeUtil {
         return null;
     }
 
-    public static Class<?> getActualClass(Class<?> c, int index) {
-        Type[] types = c.getGenericInterfaces();
-        for (Type type : types) {
-            if(type.getTypeName().startsWith(Composite.class.getName())) {
-                Class<?>[] actualTypes = TypeUtil.getActualClass(type);
-                if(actualTypes != null && actualTypes.length > index) {
-                    return actualTypes[index];
+    /**
+     * 递归寻找符合 parentClass 的所有父类、接口、接口的父类
+     * @param c 待查找的实现类
+     * @param parentClass 目标类
+     * @param index 泛型在目标类里面的位置
+     * @return 泛型类型
+     */
+    public static Class<?> getActualClass(Class<?> c, Class<?> parentClass, int index) {
+        if(!parentClass.isAssignableFrom(c)) {
+            return null;
+        }
+        Class<?> parent = c;
+        do {
+            Type[] types = parent.getGenericInterfaces();
+            for (Type type : types) {
+                if (type.getTypeName().startsWith(parentClass.getName())) {
+                    Class<?>[] actualTypes = TypeUtil.getActualClass(type);
+                    if (actualTypes != null && actualTypes.length > index) {
+                        return actualTypes[index];
+                    }
                 }
             }
-        }
+            Class<?>[] classes = parent.getInterfaces();
+            if(classes.length > 0) {
+                for(Class<?> i : classes) {
+                    Class<?> ic = getActualClass(i, parentClass, index);
+                    if(ic != null) {
+                        return ic;
+                    }
+                }
+            }
+            parent = c.getSuperclass();
+        } while (parent != null && !Object.class.equals(parent));
         return null;
     }
 }

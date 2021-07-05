@@ -1,5 +1,7 @@
 package com.huafon.common.auto.composite.annotation;
 
+import com.huafon.common.auto.composite.metadata.FetchType;
+
 import java.lang.annotation.*;
 
 @Documented

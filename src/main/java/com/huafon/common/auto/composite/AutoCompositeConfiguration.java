@@ -19,13 +19,13 @@ public class AutoCompositeConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean
-    public CompositeInterceptor compositeInterceptor() {
-        return new CompositeInterceptor();
+    public Composites composites() {
+        return new Composites();
     }
 
     @Bean
-    public Composites assembleHandlers() {
-        return new Composites();
+    @ConditionalOnMissingBean
+    public CompositeInterceptor compositeInterceptor() {
+        return new CompositeInterceptor(composites());
     }
 }

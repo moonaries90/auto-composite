@@ -1,12 +1,15 @@
 ## 对象自动封装组件
-> 用于解决 java 多态下的对象封装问题， 例如 IOrder 有多个实现类， 每一个实现类都包含一部分共有的对象，也包含一部分自己独有的对象，这个组件可以对含有 Composite 方法实现的对象做自动封装。 
+> 用于解决 java 多态下的对象封装问题， 例如 IOrder 有多个实现类， 每一个实现类都包含一部分共有的对象，也包含一部分自己独有的对象，这个组件可以对含有 Composite 方法实现的对象做自动封装。
 
-> 默认懒加载（@see FetchType），仅有在实际用到对象时，才会调用 Composite 去封装属性
+> 默认懒加载（@see FetchType），仅有在实际用到对象时，才会调用 Composite 去封装属性 
  
 ###自动封装有如下约束：
 > 待封装的属性类型仅限于普通类型、List、 ArrayList、Set、HashSet 。
+> 待封装的属性只能是 public、protected，或者包含 set 方法
 
 > 返回的对象类型仅限于普通类型、List、Map 
+
+>  @AutoField 的 property 只能是 public、protected，或者包含 get 方法
 ### 使用方式
 #### 引入pom
 ```xml

@@ -1,7 +1,7 @@
 package com.huafon.common.auto.composite.handler;
 
 import com.huafon.common.auto.composite.annotation.AutoComposite;
-import com.huafon.common.auto.composite.annotation.FetchType;
+import com.huafon.common.auto.composite.metadata.FetchType;
 import com.huafon.common.auto.composite.metadata.CompositeField;
 import com.huafon.common.auto.composite.util.TypeUtil;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -15,6 +15,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CompositeInterceptor implements MethodInterceptor {
+
+    private final Composites composites;
+
+    public CompositeInterceptor(Composites composites) {
+        this.composites = composites;
+    }
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
@@ -48,19 +54,22 @@ public class CompositeInterceptor implements MethodInterceptor {
                 excludes.addAll(Arrays.asList(autoComposite.excludes()));
                 defaultFetchType = autoComposite.fetchType();
             }
+
             final Class<?> _actualReturnType = actualReturnType;
             final FetchType _defaultFetchType = defaultFetchType;
 
             // 获取需要 组装(composite) 的属性
             List<CompositeField> compositeFields = Composites.COMPOSITE_MAP.computeIfAbsent(method, r -> {
                 // 获取实际的属性类型， 这里仅处理 List 和 Set 的特殊情况
-                Field[] fields = _actualReturnType.getDeclaredFields();
-                return Arrays.stream(fields).map(f -> {
-                    if (excludes.isEmpty() || excludes.stream().noneMatch(e -> e.equalsIgnoreCase(f.getName()))) {
-                        Class<?> actualFieldType = this.getFieldActualType(f);
-                        if (!ignore(actualFieldType)) {
-                            CompositeField compositeField = new CompositeField(_actualReturnType, returnType, f, _defaultFetchType);
-                            Composite<?, ?> composite = Composites.getHandler(compositeField.getParamType(), actualFieldType);
+                return Arrays.stream(_actualReturnType.getDeclaredFields()).map(toBeComposite -> {
+                    if (excludes.isEmpty() || excludes.stream().noneMatch(e -> e.equalsIgnoreCase(toBeComposite.getName()))) {
+                        Class<?> actualCompositeType = this.getFieldActualType(toBeComposite);
+                        if (!ignore(actualCompositeType)) {
+                            CompositeField compositeField = new CompositeField(_actualReturnType, returnType, toBeComposite, _defaultFetchType);
+                            Composite<?, ?> composite = Composites.getHandler(new Composites.Pair(compositeField.getParamType(), actualCompositeType));
+                            if(composite == null && compositeField.getParamName() != null && !compositeField.getParamName().equals("")) {
+                                composite = composites.getCommonHandler(compositeField.getParamName(), actualCompositeType);
+                            }
                             if (composite != null) {
                                 compositeField.setAssembler(composite);
                                 return compositeField;

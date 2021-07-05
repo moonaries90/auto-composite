@@ -19,6 +19,7 @@
     <version>${version}</version>
 </dependency>
 ```
+
 #### 添加 Composite 的实现类， 其中第一个泛型表示参数类型，第二个泛型表示返回值类型
 
 ```java
@@ -35,6 +36,7 @@ public class OrderImpl implements IOrder {
     /**
      * 在没有 AutoField 时， 需要 Composite<IOrder,OrderLog> 的实现类
      * 在有如下的 AutoField 的实现时， 需要 Composite<Long, OrderLog> 的实现类
+     * 都没有的情况下， 有一个 MybatisPlusComposite， 需要指定 paramName 
      */
     @AutoField(property = "id", paramName = "ORDER_ID")
     private List<OrderLog> orderLogs;
@@ -47,7 +49,24 @@ public class OrderImpl implements IOrder {
 public class OrderLogComposite implements Composite<IOrder, OrderLog> {
 
     @Override
-    public List<OrderLog> queryList(IOrder order, String paramName) {
+    public List<OrderLog> queryList(IOrder order) {
 
     }
 }
+```
+### ParamComposite, 简化参数类型设定，只约定了返回值类型
+```java
+
+public class OrderLogComposite implements ParamComposite<OrderLog> {
+    
+    @Override
+    public Set<Class<?>> supportedParamTypes() {
+        return Sets.newHashSet(IOrder.class);
+    }
+    
+    @Override
+    public List<OrderLog> queryList(IOrder order) {
+        
+    }
+}
+```

@@ -3,7 +3,7 @@
 
 > 默认懒加载（@see FetchType），仅有在实际用到对象时，才会调用 Composite 去封装属性 
  
-###自动封装有如下约束：
+### 自动封装有如下约束：
 > 待封装的属性类型仅限于普通类型、List、 ArrayList、Set、HashSet 。
 > 待封装的属性只能是 public、protected，或者包含 set 方法
 
@@ -65,7 +65,7 @@ public class OrderLogComposite implements ParamComposite<OrderLog> {
     }
     
     @Override
-    public List<OrderLog> queryList(IOrder order) {
+    public List<OrderLog> queryList(Param param) {
         
     }
 }
